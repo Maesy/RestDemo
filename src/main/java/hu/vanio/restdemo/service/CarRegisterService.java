@@ -31,23 +31,25 @@ public class CarRegisterService {
     
     private final CarRegisterRepository repository;
     
-    @Value("${mail.recipient}")
-    private String recipient;
+    private final String recipient;
     
-    @Value("${mail.sender}")
-    private String sender;
+    private final String sender;
 
     /**
      *
      * @param repository
      * @param smtpMailSender
+     * @param mailRecipient
+     * @param mailSender
      */
     @Autowired
-    public CarRegisterService(CarRegisterRepository repository, MailSender smtpMailSender) {
+    public CarRegisterService(CarRegisterRepository repository, MailSender smtpMailSender, @Value("${mail.recipient}") String mailRecipient, @Value("${mail.sender}") String mailSender) {
         Log.info("===>CarRegisterService: " + repository);
         Log.info("===>CarRegisterService: " + smtpMailSender);
         this.repository = repository;
         this.smtpMailSender = smtpMailSender;
+        this.recipient = mailRecipient;
+        this.sender = mailSender;
     }
 
     public CarEntity getCarById(Long id) throws MessagingException, CarNotFoundException {
@@ -56,11 +58,12 @@ public class CarRegisterService {
         try {
             carEntity = this.repository.get(id);
         } catch (EmptyResultDataAccessException ex) {
-            this.sendMail(
-                    "GET action - " + ((carEntity != null) ? "Success" : "Failed"),
-                    "Querying element with the id: " + id + " result: " + carEntity);
             throw new CarNotFoundException();
         }
+        this.sendMail(
+                    "GET action - " + ((carEntity != null) ? "Success" : "Failed"),
+                    "Querying element with the id: " + id + " result: " + carEntity);
+        
         return carEntity;
     }
 
@@ -81,11 +84,12 @@ public class CarRegisterService {
         try {
             list = this.repository.search(searchToken);
         } catch (EmptyResultDataAccessException ex) {
-            this.sendMail(
+            
+        }
+        this.sendMail(
                     "SEARCH action - " + ((list.isEmpty()) ? "Success" : "Failed"),
                     "Querying element with the type containing: " + searchToken + " result: " + list
             );
-        }
         return list;
     }
 

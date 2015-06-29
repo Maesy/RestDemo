@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
  * @author Meszaros Andras <andras.meszaros@vanio.hu>
  */
 public class MockMailSender implements MailSender {
-
+    
     private final Logger logger = LoggerFactory.getLogger(MockMailSender.class);
     
     @Override
