@@ -1,2 +1,2 @@
 # RestDemo
-Trying out to develop a rest api and unit testing
+Learning how to develop a REST API implementation in spring environment.
