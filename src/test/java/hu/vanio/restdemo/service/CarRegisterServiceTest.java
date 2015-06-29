@@ -1,5 +1,8 @@
 package hu.vanio.restdemo.service;
 
+import hu.vanio.restdemo.config.MailConfig;
+import hu.vanio.restdemo.config.MongoDBConfig;
+import hu.vanio.restdemo.config.OracleDBConfig;
 import hu.vanio.restdemo.entity.CarEntity;
 import hu.vanio.restdemo.exceptions.CarNotFoundException;
 import java.util.Date;
@@ -11,14 +14,19 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  *
  * @author Meszaros Andras <andras.meszaros@vanio.hu>
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = {OracleDBConfig.class, MongoDBConfig.class})
 public class CarRegisterServiceTest {
 
     /**
@@ -156,7 +164,7 @@ public class CarRegisterServiceTest {
         System.out.println("updateCar");
         //Place element to update
         MockCarRegisterRepository mockCarRegisterRepository = new MockCarRegisterRepository();
-        MockMailSender mockMailSender = new MockMailSender();
+        MockErrorMailSender mockMailSender = new MockErrorMailSender();
         Long id = 1L;
         CarEntity carEntity = new CarEntity(id, new Date(), "Ford", false, 2.5D, 200000);
         mockCarRegisterRepository.getCarEntityMap().put(id, carEntity);
